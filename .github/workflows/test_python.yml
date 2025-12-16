@@ -13,10 +13,26 @@ on:
   workflow_dispatch:
 
 jobs:
+  
+  get_git_diff:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get git diff with ${{ github.ref.name }}
+        id: gitdiff
+        run: |
+          echo "TESTING=TESTING" >> $GITHUB_OUTPUT
+          echo $TESTING
+  test_job:
+    runs-on: ubuntu_22_04_versions_3_9
+    steps:
+      - name: Testing
+        run: |
+          echo ${{ get_git_diff.steps.gitdiff.outputs.TESTING }}
+          echo "END"
 
   latest:
 
-    runs-on: linux
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
 
