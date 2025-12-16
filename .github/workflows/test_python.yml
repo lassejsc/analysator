@@ -22,6 +22,7 @@ jobs:
       - name: Get git diff with ${{ github.ref.name }}
         id: gitdiff
         run: |
+          echo ${{ github.ref.name }}
           echo "TESTING=TESTING" >> $GITHUB_OUTPUT
           echo $TESTING
   test_job:
