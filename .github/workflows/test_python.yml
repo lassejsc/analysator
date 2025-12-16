@@ -17,21 +17,21 @@ jobs:
   get_git_diff:
     runs-on: ubuntu-latest
     outputs:
-      TESTING: ${{ steps.gitdiff.outputs.TESTING }}
+      BRANCH: ${{ steps.gitdiff.outputs.BRANCH }}
     steps:
       - name: Get git diff with ${{ github.ref.name }}
         id: gitdiff
         run: |
           echo ${{ github.ref }} | grep -Po "\w+$"
-          echo "TESTING=TESTING" >> $GITHUB_OUTPUT
-          echo $TESTING
+          echo "BRANCH=$(${{ github.ref }} | grep -Po "\w+$")" >> $GITHUB_OUTPUT
+          echo $BRANCH
   test_job:
     needs: get_git_diff
     runs-on: ubuntu-22.04
     steps:
       - name: Testing
         run: |
-          echo ${{ needs.get_git_diff.outputs.TESTING }}
+          echo ${{ needs.get_git_diff.outputs.branch }}
           echo "END"
 
   latest:
