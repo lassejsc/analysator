@@ -16,6 +16,8 @@ jobs:
   
   get_git_diff:
     runs-on: ubuntu-latest
+    outputs:
+      TESTING: ${{ steps.gitdiff.outputs.TESTING }}
     steps:
       - name: Get git diff with ${{ github.ref.name }}
         id: gitdiff
@@ -23,11 +25,12 @@ jobs:
           echo "TESTING=TESTING" >> $GITHUB_OUTPUT
           echo $TESTING
   test_job:
+    needs: get_git_diff
     runs-on: ubuntu_22_04_versions_3_9
     steps:
       - name: Testing
         run: |
-          echo ${{ get_git_diff.steps.gitdiff.outputs.TESTING }}
+          echo ${{ needs.get_git_diff.outputs.TESTING }}
           echo "END"
 
   latest:
