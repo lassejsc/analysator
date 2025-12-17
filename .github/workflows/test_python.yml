@@ -13,6 +13,27 @@ on:
   workflow_dispatch:
 
 jobs:
+  
+  get_git_diff:
+    runs-on: ubuntu-latest
+    outputs:
+      BRANCH: ${{ steps.gitdiff.outputs.BRANCH }}
+    steps:
+      - name: Get git diff with 
+        id: gitdiff
+        run: |
+          echo ${{ github.ref }} | grep -Po "\w+$"
+          echo ${{ github.base_ref }}
+          #echo "BRANCH=$(${{ github.ref }} | grep -Po "\w+$")" >> $GITHUB_OUTPUT
+          #echo $BRANCH
+  test_job:
+    needs: get_git_diff
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Testing
+        run: |
+          echo ${{ needs.get_git_diff.outputs.branch }}
+          echo "END"
 
   latest:
 
