@@ -19,12 +19,13 @@ jobs:
     outputs:
       BRANCH: ${{ steps.gitdiff.outputs.BRANCH }}
     steps:
-      - name: Get git diff with ${{ github.ref.name }}
+      - name: Get git diff with 
         id: gitdiff
         run: |
           echo ${{ github.ref }} | grep -Po "\w+$"
-          echo "BRANCH=$(${{ github.ref }} | grep -Po "\w+$")" >> $GITHUB_OUTPUT
-          echo $BRANCH
+          echo ${{ github.base_ref }}
+          #echo "BRANCH=$(${{ github.ref }} | grep -Po "\w+$")" >> $GITHUB_OUTPUT
+          #echo $BRANCH
   test_job:
     needs: get_git_diff
     runs-on: ubuntu-22.04
