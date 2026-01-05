@@ -60,10 +60,12 @@ def compare_images_in_folders(a,b,jobcount,jobcurr):
 
     #Feed the different files to compare_images
     for file in different_files[start:end]:
-        if(not compare_images(file,file.replace(a,b))):
-            different=True
-            print("Images differ:",file,file.replace(a,b))
-
+        try:
+            if(not compare_images(file,file.replace(a,b))):
+                different=True
+                print("Images differ:",file,file.replace(a,b))
+        except Exception as e:
+            raise SystemError("Error calling compare_images():"+str(e))
 
 
     #Print unique and missing files
