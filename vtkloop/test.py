@@ -15,7 +15,6 @@ def buildDescriptor(f):
     for i in range(0,max_ref_level):
         isum = isum + 2**(3*i) * xc * yc * zc
         cid_offsets[i+1] = isum
-    print(cid_offsets)
     xcells = np.zeros((max_ref_level+1), dtype=np.int64)
     ycells = np.zeros((max_ref_level+1), dtype=np.int64)
     zcells = np.zeros((max_ref_level+1), dtype=np.int64)
@@ -68,7 +67,6 @@ def buildDescriptor(f):
                 idx += 1
         if l < max_ref_level:
             descr.write("|")
-
     return descr.getvalue(), idxToFileIndex
 
 file="/home/siclasse/bulk.0000110.vlsv"
@@ -76,58 +74,58 @@ f=pt.vlsvfile.VlsvReader(file)
 
 import time
 now=time.time()
-buildDescriptor(f)
+var=buildDescriptor(f)
 print(time.time()-now)
-f._VlsvReader__read_fileindex_for_cellid()
 
+now=time.time()
+
+f._VlsvReader__read_fileindex_for_cellid()
 fileindex_for_cellid = f._VlsvReader__fileindex_for_cellid
-print(type(fileindex_for_cellid))
 xc= f._VlsvReader__xcells
 yc= f._VlsvReader__ycells
 zc= f._VlsvReader__zcells
 max_ref_level = f.get_max_refinement_level()     
 #print(f.get_spatial_mesh_size()) just [xc,yc,zc]
-cid_offset= np.zeros(max_ref_level+1,dtype=np.int64)
-isum=0
-for i in range(0,max_ref_level):
-    isum+=2**(3*i)*xc*yc*zc
-    cid_offset[i+1]=isum
-
-xcells = np.zeros((max_ref_level+1),dtype=np.int64)
-ycells = np.zeros((max_ref_level+1),dtype=np.int64)
-zcells = np.zeros((max_ref_level+1),dtype=np.int64)
-
-for r in range(max_ref_level+1):
-    xcells[r] = xc*2**(r)
-    ycells[r] = yc*2**(r)
-    zcells[r] = zc*2**(r)
-
-delta = np.array([[0,0,0],[1,0,0],[0,1,0],[1,1,0]
-                  ,[0,0,1],[1,0,1],[0,1,1],[1,1,1]],dtype=np.int32
-                  )
-now=time.time()
-idxToFileIndex = {} 
-from io import StringIO
-descr=StringIO()
-print(list(fileindex_for_cellid.keys())[0])
-print(fileindex_for_cellid[34965])
-#print(fileindex_for_cellid)
-idx=0
-subdivided = [[] for l in range(max_ref_level+1)]
-for c in range(1,int(np.prod(f.get_spatial_mesh_size()))+1):
-    if c in fileindex_for_cellid.keys():
-        descr.write(".")
-        idxToFileIndex[idx] = fileindex_for_cellid[c]
-    else:
-        descr.write("R")
-        subdivided[0].append(c)
-    idx += 1
+test=chp.test(fileindex_for_cellid,xc,yc,zc,max_ref_level)
 print(time.time()-now)
-# po=chp.test(a,np.array([-1,-2,-3,-4,-5,-6,-7]))
-a=np.array([1,2,3,4,5,6,7],dtype=np.float32)
+print(test[0]==var[0])
 
-print("-------------------------")
-now=time.time()
-po=chp.test(a,fileindex_for_cellid,xc,yc,zc,max_ref_level)
-print(time.time()-now)
-print(po)
+# cid_offset= np.zeros(max_ref_level+1,dtype=np.int64)
+# isum=0
+# for i in range(0,max_ref_level):
+#     isum+=2**(3*i)*xc*yc*zc
+#     cid_offset[i+1]=isum
+#
+# xcells = np.zeros((max_ref_level+1),dtype=np.int64)
+# ycells = np.zeros((max_ref_level+1),dtype=np.int64)
+# zcells = np.zeros((max_ref_level+1),dtype=np.int64)
+#
+# for r in range(max_ref_level+1):
+#     xcells[r] = xc*2**(r)
+#     ycells[r] = yc*2**(r)
+#     zcells[r] = zc*2**(r)
+#
+# delta = np.array([[0,0,0],[1,0,0],[0,1,0],[1,1,0]
+#                   ,[0,0,1],[1,0,1],[0,1,1],[1,1,1]],dtype=np.int32
+#                   )
+# now=time.time()
+# idxToFileIndex = {} 
+# from io import StringIO
+# descr=StringIO()
+# #print(fileindex_for_cellid)
+# idx=0
+# subdivided = [[] for l in range(max_ref_level+1)]
+# for c in range(1,int(np.prod(f.get_spatial_mesh_size()))+1):
+#     if c in fileindex_for_cellid.keys():
+#         descr.write(".")
+#         idxToFileIndex[idx] = fileindex_for_cellid[c]
+#     else:
+#         descr.write("R")
+#         subdivided[0].append(c)
+#     idx += 1
+# print(time.time()-now)
+# # po=chp.test(a,np.array([-1,-2,-3,-4,-5,-6,-7]))
+# a=np.array([1,2,3,4,5,6,7],dtype=np.float32)
+#
+# print("-------------------------")
+
