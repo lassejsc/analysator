@@ -3430,7 +3430,7 @@ class VlsvReader(object):
                      [1.,1.,1.],
                  ])
          v_cellcoords=np.swapaxes(vcoords+eps*offsets[:,np.newaxis],0,1) 
-         v_cells=self.get_cellid(v_cellcoords)
+         v_cells=self.get_cellid(v_cellcoords.reshape((-1,3))).reshape((-1,8))
          v_cellcoords = self.get_cell_coordinates(v_cells.reshape((-1))).reshape((-1,8,3))
 
          dual_sets.update({vinds: tuple(v_cells[i,:]) for i,vinds in enumerate(todo)})
